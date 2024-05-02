@@ -1,10 +1,11 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ButtonInputComponent } from '../../../libs/src/lib/button-input/button-input.component';
 
 @Component({
   selector: 'app-nx-welcome',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ButtonInputComponent],
   template: `
     <!--
      * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -438,6 +439,7 @@ import { CommonModule } from '@angular/common';
         <!--  HERO  -->
         <div id="hero" class="rounded">
           <div class="text-container">
+            <button-input></button-input>
             <h2>
               <svg
                 fill="none"
