@@ -1,4 +1,5 @@
 import express from 'express';
+import bodyParser from 'body-parser';
 import cors from 'cors';
 
 import { Builder, By } from 'selenium-webdriver';
@@ -9,6 +10,9 @@ const port = process.env.PORT ? Number(process.env.PORT) : 3000;
 const uiPath = process.env.UI ?? '../../../../dist/ui';
 
 const app = express();
+
+// parse request payload as json
+app.use(bodyParser.json());
 
 // CORS configuration
 app.use(cors({
@@ -29,7 +33,10 @@ app.get('*', function(req, res) {
 });
 
 app.post('/api', async (req, res) => {
+  console.log(`[ processing /api call ]`);
   const code = req.body;
+  console.log(`[ code ]`, code);
+  console.log(`[ code content]`, code.data);
 
   try {
     await runSeleniumScript(code);
@@ -45,7 +52,10 @@ app.listen(port, host, () => {
 
 async function runSeleniumScript(code) {
   const { Builder, By, Key, until } = require('selenium-webdriver');
-  const driver = new Builder().forBrowser('chrome').build();
+  const driver = await new Builder().forBrowser('chrome').build();
+  
+  // Run in headless mode
+  // const driver = await new Builder().forBrowser('chrome').setChromeOptions(new chrome.Options().headless()).build();
 
   try {
     await driver.get("https://kahoot.it/")
