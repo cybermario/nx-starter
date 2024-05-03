@@ -1,10 +1,12 @@
 import express from 'express';
 import cors from 'cors';
 
-const { Builder, By } = require('selenium-webdriver');
+import { Builder, By } from 'selenium-webdriver';
+import path from 'path';
 
-const host = process.env.HOST ?? 'localhost';
+const host = process.env.HOST ?? '0.0.0.0';
 const port = process.env.PORT ? Number(process.env.PORT) : 3000;
+const uiPath = process.env.UI ?? '../../../../dist/ui';
 
 const app = express();
 
@@ -13,8 +15,17 @@ app.use(cors({
   origin: 'http://localhost:4200' // Allow only the Angular app to access
 }));
 
-app.get('/', (req, res) => {
+// Serve static files from the Angular app
+const angularAppPath = path.join(__dirname, uiPath);
+app.use(express.static(angularAppPath));
+
+app.get('/hello', (req, res) => {
   res.send({ message: 'Hello API' });
+});
+
+// All routes go to the Angular app
+app.get('*', function(req, res) {
+    res.sendFile(path.join(angularAppPath, 'index.html'));
 });
 
 app.post('/api', async (req, res) => {
