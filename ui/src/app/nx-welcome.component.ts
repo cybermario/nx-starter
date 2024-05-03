@@ -1,11 +1,13 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonInputComponent } from '../../../libs/src/lib/button-input/button-input.component';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { ConfigService } from './config.service';
 
 @Component({
   selector: 'app-nx-welcome',
   standalone: true,
-  imports: [CommonModule, ButtonInputComponent],
+  imports: [CommonModule, ButtonInputComponent, HttpClientModule],
   template: `
     <!--
      * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -439,7 +441,7 @@ import { ButtonInputComponent } from '../../../libs/src/lib/button-input/button-
         <!--  HERO  -->
         <div id="hero" class="rounded">
           <div class="text-container">
-            <button-input></button-input>
+            <button-input (submitData)="handleData($event)"></button-input>
             <h2>
               <svg
                 fill="none"
@@ -906,4 +908,14 @@ nx affected:e2e</pre>
   styles: [],
   encapsulation: ViewEncapsulation.None,
 })
-export class NxWelcomeComponent {}
+export class NxWelcomeComponent {
+  constructor(private configService: ConfigService, private http: HttpClient) {}
+
+  handleData(data: string) {
+    this.http.post(this.configService.apiUrl + '/api', { data: data })
+      .subscribe({
+        next: (response) => console.log('Data submitted', response),
+        error: (error) => console.error('Error:', error)
+      });
+  }
+}
