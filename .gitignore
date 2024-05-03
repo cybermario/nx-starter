@@ -40,3 +40,9 @@ Thumbs.db
 
 .nx/cache
 .angular
+
+# Private Notes
+NOTES.md
+
+# Scripts
+scripts
